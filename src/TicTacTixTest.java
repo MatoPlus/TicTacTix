@@ -6,7 +6,7 @@ public class TicTacTixTest {
         int column = 0;
         int row = 0;
 
-        Scanner kbInput = new Scanner( System.in );
+        Scanner keyInput = new Scanner( System.in );
         TicTacTix game = new TicTacTix();
         
         do {
@@ -15,20 +15,20 @@ public class TicTacTixTest {
             
             // Prompt and get row selection
             System.out.print( "Row: " );
-            row = kbInput.nextInt();
+            row = keyInput.nextInt();
             
             // Prompt and get column selection
             System.out.print( "Column: " );
-            column = kbInput.nextInt();
+            column = keyInput.nextInt();
             
             // Check for row and column selection.
             if ( game.move(row, column ) == -1 ) {
                 System.out.println( "\nInvalid insert at row \"" + row + "\" at column \"" + column + "\"" );
                 System.out.println( "Please Try Again..\n" );
             } 
-        } while (true); //!game.hasWon() );
+        } while (!game.hasWon());
         
-        //System.out.println( game );
-        //System.out.println( "*** GAME OVER ***" );
+        System.out.println( game );
+        System.out.println( "*** GAME OVER ***" );
     }   
 }

@@ -31,9 +31,9 @@ public class TicTacTix {
     public int move(int row, int column) {
 
         // Exit if someone has already won
-        //if (hasWon()){
-        //return -1;
-        //}
+        if (hasWon()){
+            return -1;
+        }
 
         // check range of row
         if (row < 0 || row > 2) {
@@ -61,54 +61,70 @@ public class TicTacTix {
     // This method returns true if one of the players has won the game.
     public boolean hasWon() {
         boolean status = false;
+        boolean tempCheck = false;
+        int tempElement = -1;
 
         // Check for a horizontal win
-        for ( int row=0; row<3; row++ ) { 
-            for ( int column=0; column<3; column++ ) {
-                if (grid[row][column] != 0 &&
-                        grid[row][column] == grid[row][column+1] &&
-                        grid[row][column] == grid[row][column+2] &&
-                        grid[row][column] == grid[row][column+3]) {
-                    status = true;
-                        }
+        for ( int row=0; row<3; row++ ) {
+            if (grid[row][0] != 0) {
+                status = true;
+                tempElement = grid[row][0];
+                for ( int column=1; column<3; column++ ) {
+                    if (tempElement != grid[row][column]) {
+                        status = false;
+                        break;
+                    }
+                }
             }
+            else {
+                status = false;
+            }
+            if (status) {
+                break;
+            }   
         }
 
         // Check for a vertical win
-        for ( int row=0; row<3; row++ ) {
-            for ( int column=0; column<7; column++ ) {
-                if (grid[row][column] != 0 &&
-                        grid[row][column] == grid[row+1][column] &&
-                        grid[row][column] == grid[row+2][column] &&
-                        grid[row][column] == grid[row+3][column]) {
-                    status = true;
-                        }
+        for ( int column=0; column<3; column++ ) {
+            if (grid[0][column] != 0) {
+                status = true;
+                tempElement = grid[0][column];
+                for ( int row=1; row<3; row++ ) {
+                    if (tempElement != grid[row][column]) {
+                        status = false;
+                        break;
+                    }
+                }
             }
+            else {
+                status = false;
+            }
+            if (status) {
+                break;
+            }   
         }
 
-        // Check for a diagonal win (negative slope)
-        for ( int row=0; row<3; row++ ) {
-            for ( int column=0; column<4; column++ ) {
-                if (grid[row][column] != 0 &&
-                        grid[row][column] == grid[row+1][column+1] &&
-                        grid[row][column] == grid[row+2][column+2] &&
-                        grid[row][column] == grid[row+3][column+3]) {
-                    status = true;
-                        }
-            }
-        }
-
-        // Check for a diagonal win (positive slope)
-        for ( int row=5; row>3; row-- ) {
-            for ( int column=0; column<4; column++ ) {
-                if (grid[row][column] != 0 &&
-                        grid[row][column] == grid[row-1][column+1] &&
-                        grid[row][column] == grid[row-2][column+2] &&
-                        grid[row][column] == grid[row-3][column+3]) {
-                    status = true;
-                        }
-            }
-        }
+        //        // Check for a diagonal win (negative slope)
+        //        for ( int row=0; row<3; row++ ) {
+        //            for ( int column=0; column<3; column++ ) {
+        //                if (grid[row][column] != 0 &&
+        //                    grid[row][column] == grid[row+1][column+1] &&
+        //                    grid[row][column] == grid[row+2][column+2]) {
+        //                    status = true;
+        //                }
+        //            }
+        //        }
+        //        
+        //        // Check for a diagonal win (positive slope)
+        //        for ( int row=5; row>3; row-- ) {
+        //            for ( int column=0; column<4; column++ ) {
+        //                if (grid[row][column] != 0 &&
+        //                    grid[row][column] == grid[row-1][column+1] &&
+        //                    grid[row][column] == grid[row-2][column+2]) {
+        //                    status = true;
+        //                }
+        //            }
+        //        }
 
         return status;
     }
@@ -127,19 +143,11 @@ public class TicTacTix {
             System.out.println("\n    ===COMPUTER'S MOVE===");
         }
 
-        //print "\n\t   1   2   3"
-        //print "\t1: "+board[0][0]+" | "+board[0][1]+" | "+board[0][2]
-        //print "\t  ---+---+---"
-        //print "\t2: "+board[1][0]+" | "+board[1][1]+" | "+board[1][2]
+        String returnString = "\n\t   0   1   2\n";
 
-        //print "\t  ---+---+---"
-        //print "\t3: "+board[2][0]+" | "+board[2][1]+" | "+board[2][2]
-        //print
-        String returnString = "\n\t   0   1   2\n" + "\t  ---+---+---\n";
- ;
         for ( int row=0; row<3; row++ ) {
             returnString = returnString + "\t" + row + ": "; 
-;
+
             for ( int column=0; column<3; column++ ) {
 
                 if (column == 0 || column == 2) {
@@ -149,7 +157,12 @@ public class TicTacTix {
                     returnString = returnString + " | " + grid[row][column] + " | ";  
                 } 
             }
-            returnString = returnString + "\n\t  ---+---+---\n";
+            if (row != 2) {
+                returnString = returnString + "\n\t  ---+---+---\n";
+            }
+            else {
+                returnString = returnString + "\n";
+            }
         }
         return returnString;
     }
