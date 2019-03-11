@@ -10,28 +10,49 @@
  */
 public class TicTacTix {
 
-    // Array used to represent the 6 (row) x 7 (col) game board.
-    private int[][] grid;
-    private int filledCells = 0;
+    // Array used to represent the (layer)*(row)*(col) game board.
+    private int[][][] grid;
+    private int filledCells;
+    private int dimensions;
 
     // The player whose turn it is (1 or 2).
     private int currentPlayer;
 
     // Create and initialize the grid for our game.
-    public TicTacTix() {
+    public TicTacTix(int dimensions, boolean isFirst) {
+       
+        // Initialize instance variables
+        this.dimensions = dimensions;
+        filledCells = 0;
         // create the 3 row x 3 col grid of integers (0 default)
-        grid = new int[3][3];
-        // set the first move to Player 1
-        currentPlayer = 1;
+        grid = new int[dimensions][dimensions][dimensions];
+
+        // set the first move to corresponding player depending on 'first' argument.
+        if (isFirst) {
+            currentPlayer = 1;
+        }
+        else {
+            currentPlayer = 2;
+        }
     }
 
     // Drop a checker into the specified column, and 
     // return the row that the checker lands on.
     // (invalid move returns -1)
-    public int move(int row, int column) {
+    public int move(int layer, int row, int column) {
+
+        // Tweak row and column to make data useable for arrays (index start at 0).
+        layer-=1;
+        row-=1;
+        column-=1;
 
         // Exit if someone has already won
         if (hasWon()){
+            return -1;
+        }
+
+        // Check range of layer
+        if (layer < 0 || layer > 2) {
             return -1;
         }
 
@@ -45,12 +66,12 @@ public class TicTacTix {
             return -1;
         }
 
-        if (grid[row][column] != 0) {
+        if (grid[layer][row][column] != 0) {
             return -1;
         }
 
         // Fill the row and column with a checker. record move
-        grid[row][column] = currentPlayer;
+        grid[layer][row][column] = currentPlayer;
         filledCells++;
 
         // Alternate the players
@@ -61,108 +82,124 @@ public class TicTacTix {
     // This method returns true if one of the players has won the game.
     public boolean hasWon() {
         boolean status = false;
-        boolean tempCheck = false;
         int tempElement = -1;
 
-        // Check for a horizontal win
-        for ( int row=0; row<3; row++ ) {
-            if (grid[row][0] != 0) {
-                status = true;
-                tempElement = grid[row][0];
-                for ( int column=1; column<3; column++ ) {
-                    if (tempElement != grid[row][column]) {
-                        status = false;
-                        break;
-                    }
-                }
-            }
-            else {
-                status = false;
-            }
-            if (status) {
-                break;
-            }   
-        }
+         //Check for a horizontal win
+        //for ( int row=0; row<3; row++ ) {
+            //if (grid[row][0] != 0) {
+                //status = true;
+                //tempElement = grid[row][0];
+                //for ( int column=1; column<3; column++ ) {
+                    //if (tempElement != grid[row][column]) {
+                        //status = false;
+                        //break;
+                    //}
+                //}
+            //}
+            //else {
+                //status = false;
+            //}
+            //if (status) {
+                //break;
+            //}   
+        //}
 
-        // Check for a vertical win
-        for ( int column=0; column<3; column++ ) {
-            if (grid[0][column] != 0) {
-                status = true;
-                tempElement = grid[0][column];
-                for ( int row=1; row<3; row++ ) {
-                    if (tempElement != grid[row][column]) {
-                        status = false;
-                        break;
-                    }
-                }
-            }
-            else {
-                status = false;
-            }
-            if (status) {
-                break;
-            }   
-        }
+         //Check for a vertical win
+        //for ( int column=0; column<3; column++ ) {
+            //if (grid[0][column] != 0) {
+                //status = true;
+                //tempElement = grid[0][column];
+                //for ( int row=1; row<3; row++ ) {
+                    //if (tempElement != grid[row][column]) {
+                        //status = false;
+                        //break;
+                    //}
+                //}
+            //}
+            //else {
+                //status = false;
+            //}
+            //if (status) {
+                //break;
+            //}   
+        //}
 
-        //        // Check for a diagonal win (negative slope)
-        //        for ( int row=0; row<3; row++ ) {
-        //            for ( int column=0; column<3; column++ ) {
-        //                if (grid[row][column] != 0 &&
-        //                    grid[row][column] == grid[row+1][column+1] &&
-        //                    grid[row][column] == grid[row+2][column+2]) {
-        //                    status = true;
-        //                }
-        //            }
-        //        }
-        //        
-        //        // Check for a diagonal win (positive slope)
-        //        for ( int row=5; row>3; row-- ) {
-        //            for ( int column=0; column<4; column++ ) {
-        //                if (grid[row][column] != 0 &&
-        //                    grid[row][column] == grid[row-1][column+1] &&
-        //                    grid[row][column] == grid[row-2][column+2]) {
-        //                    status = true;
-        //                }
-        //            }
-        //        }
+         //Check for a diagonal win (negative slope)
+        //if (grid[0][0] != 0) {
+            //tempElement = grid[0][0];
+            //status = true;
+            //for ( int slope=0; slope<3; slope++ ) {
+                //if (tempElement != grid[slope][slope]) {
+                    //status = false;
+                    //break;
+                //}
+            //}
+
+        //}
+
+
+         //Check for a diagonal win (negative slope)
+        //if (grid[0][2] != 0) {
+            //tempElement = grid[0][2];
+            //status = true;
+            //for ( int slope=0; slope<3; slope++ ) {
+                //if (tempElement != grid[slope][2-slope]) {
+                    //status = false;
+                    //break;
+                //}
+            //}
+
+        //}
 
         return status;
     }
 
     // Returns a String representation of the Connect Four game board.
     public String toString() {
+        
+        // Save output
+        String returnString = "\n\t\t";
 
-        // Print heading
+        // Save heading
+
         if (filledCells == 0) {
-            System.out.println("\n    ======TIC-TAC-TOE======");
+            returnString += ("======TIC-TAC-TOE======\n");
         } 
         else if (currentPlayer == 1) {
-            System.out.println("\n    =====PLAYER'S MOVE=====");
+            returnString += ("=====PLAYER'S MOVE=====\n");
         }
         else if (currentPlayer == 2) {
-            System.out.println("\n    ===COMPUTER'S MOVE===");
+            returnString += ("===COMPUTER'S MOVE===\n");
         }
 
-        String returnString = "\n\t   0   1   2\n";
-
-        for ( int row=0; row<3; row++ ) {
-            returnString = returnString + "\t" + row + ": "; 
-
-            for ( int column=0; column<3; column++ ) {
-
-                if (column == 0 || column == 2) {
-                    returnString = returnString +  grid[row][column];  
+        for (int layer = 0; layer < dimensions; layer++) {
+            returnString += "\t";
+            for (int column = 0; column < dimensions; column++) {
+                returnString += ("   "+(column+1));
+            }
+        }
+        returnString += "\n";
+        
+        for ( int row = 0; row < dimensions; row++) {
+            for ( int layer=0; layer< dimensions; layer++ ) {
+                returnString += "\t" + (row+1) + ": "; 
+                for ( int column=0; column< dimensions; column++ ) {
+                    if (column == 0 || column == 2) {
+                        returnString += grid[layer][row][column];  
+                    }
+                    else {
+                        returnString += " | " + grid[layer][row][column] + " | ";  
+                    } 
                 }
-                else {
-                    returnString = returnString + " | " + grid[row][column] + " | ";  
-                } 
             }
+            returnString += "\n";
             if (row != 2) {
-                returnString = returnString + "\n\t  ---+---+---\n";
+                for (int layer = 0; layer < dimensions; layer++) { 
+                    returnString += "\t  ---+---+---";
+                }
+                returnString += "\n";
             }
-            else {
-                returnString = returnString + "\n";
-            }
+
         }
         return returnString;
     }
