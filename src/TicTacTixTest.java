@@ -2,21 +2,56 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 // Test class to demonstrate our Connect Four Model
 public class TicTacTixTest {
     public static void main(String[] args) {
+ 
         int dimensions = 3;
         int layer = 0;
         int row = 0;
         int column = 0;
         int[] computerMoves = new int[3];
+        int recordLineNumber = 0;
+        String previousWinner = null;
         String winner = null;
         boolean isFirst  = false;
 
+
+        // Print hall of fame if possible...
+        try {
+
+            Scanner fileInput = new Scanner(new File("HallOfFame.txt"));
+
+            System.out.println("\t======Wall Of Fame======\n");
+
+            if (fileInput.hasNext()) {
+
+                while (fileInput.hasNext()) {
+
+                previousWinner = fileInput.nextLine().trim();
+                recordLineNumber++;
+
+                System.out.println("\t    " + recordLineNumber + ": " + previousWinner);
+                }
+            }
+            else {
+
+                System.out.println ("\t    No one here yet...");
+            }
+        }
+        catch (IOException exception) {
+            System.out.println("No Human Has Ever Beat Me.. *laughs in binary*\n");
+        }
+
+
+
+        // Determine if player goes first...
         isFirst = validatedIsFirst();
 
+        // Set up game, passing in if player should go first...
         TicTacTix game = new TicTacTix(dimensions, isFirst);
       
         do {
@@ -64,6 +99,12 @@ public class TicTacTixTest {
     
         System.out.println( game );
         
+        if (game.getWinner() == 1) {
+            recordHallOfFame();
+        }
+
+        System.out.println("\nThank you for playing TicTacTix!");
+
     }   
 
     public static boolean validatedIsFirst() {
@@ -151,6 +192,30 @@ public class TicTacTixTest {
             }
         }
         return input;
+    }
+
+    public static void recordHallOfFame() {
+        
+        String name = null;
+        Scanner keyInput = new Scanner(System.in);
+
+        // Prompt and get name
+        System.out.print("Winner! Please enter your name: ");
+        name = keyInput.nextLine();
+
+        // Try to open, write, and close "HallOfFame.txt".
+        try {
+            FileWriter appendFile = new FileWriter("HallOfFame.txt", true);
+            PrintWriter fileOutput = new PrintWriter(appendFile);
+            
+            fileOutput.println(name);
+
+            fileOutput.close();
+        }
+        catch (IOException exception) {
+            System.err.println("Java Exception: " + exception);
+            System.out.println("Sorry, error occured when outputing to file \"HallOfFame.txt\"");
+        }
     }
 
 }

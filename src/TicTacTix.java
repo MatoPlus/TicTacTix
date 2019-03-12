@@ -308,11 +308,18 @@ public class TicTacTix {
         
         return status;
     }
-
+    
+    // Get current player to decide logic in main.
     public int getCurrentPlayer() {
         return currentPlayer;
     }
 
+    // Get winner to decide logic in main.
+    public int getWinner() {
+        return winner;
+    }
+
+    // Convert int to approrpiate symbol for output in toString()
     private String convertSymbol(int key) {
         
         String symbol = null;
