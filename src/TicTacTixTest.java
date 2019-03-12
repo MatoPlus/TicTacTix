@@ -1,5 +1,9 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.IOException;
+
 // Test class to demonstrate our Connect Four Model
 public class TicTacTixTest {
     public static void main(String[] args) {
@@ -7,6 +11,8 @@ public class TicTacTixTest {
         int layer = 0;
         int row = 0;
         int column = 0;
+        int[] computerMoves = new int[3];
+        String winner = null;
         boolean isFirst  = false;
 
         isFirst = validatedIsFirst();
@@ -16,29 +22,48 @@ public class TicTacTixTest {
         do {
             // Game board output 
             System.out.println(game);
-            
-            // Prompt and get layer selection
-            layer = validatedLayer(dimensions);
 
-            System.out.println();
+            if (game.getCurrentPlayer() == 1) {
+                // Prompt and get layer selection
+                layer = validatedLayer(dimensions);
+                System.out.println();
 
-            // Prompt and get row selection
-            row = validatedRow(dimensions); 
+                // Prompt and get row selection
+                row = validatedRow(dimensions); 
+                System.out.println();
+
+                // Prompt and get column selection
+                column = validatedColumn(dimensions); 
+
+                // Check if selection us valid.
+                if ( game.move(layer, row, column ) == -1 ) {
+                    System.out.println( "\nInvalid insert at layer \"" + layer + "\" at row \"" + row +
+                            "\" of column \"" + column + "\"" );
+
+                    System.out.println( "Please Try Again..\n" );
+                } 
+            }
+            else {
+               
+                // Get and execute computer move. 
+                computerMoves = game.getComputerMove();
+
+                layer = computerMoves[0];
+                row = computerMoves[1];
+                column = computerMoves[2];
+                
+                // Execute move
+                game.move(layer, row, column);
             
-            System.out.println();
+                System.out.print("Computer picked layer \"" + layer + "\" at row \"" + row +
+                        "\" of column \"" + column + "\"\n" );
             
-            // Prompt and get column selection
-            column = validatedColumn(dimensions); 
-            
-            // Check for row and column selection.
-            if ( game.move(layer, row, column ) == -1 ) {
-                System.out.println( "\nInvalid insert at row \"" + row + "\" at column \"" + column + "\"" );
-                System.out.println( "Please Try Again..\n" );
-            } 
-        } while (!game.hasWon());
+            }
+
+        } while (!game.isGameOver());
     
         System.out.println( game );
-        System.out.println( "*** GAME OVER ***" );
+        
     }   
 
     public static boolean validatedIsFirst() {
