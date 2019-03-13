@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
+ *
  * This class provides the user interface logic for a game of TicTacTix,
  * which allows players to choose coordinates in a 3 dimensional grid TicTacToe board.
  * The default dimensions are 3 by 3 by 3... This value can be dynamically changed. Note that this program made for
@@ -57,7 +58,7 @@ public class TicTacTixTest {
             }
             else {
 
-                System.out.println ("\t    No one here yet...");
+                System.out.println ("\t    No one here yet...\n");
             }
         }
         // File is not found... Assume that there are no winner and inform user.
@@ -81,19 +82,19 @@ public class TicTacTixTest {
             // Let player make move if it is the appropriate turn.
             if (game.getCurrentPlayer() == PLAYER) {
                     
-                // Prompt and get layer selection
+                // Prompt and get layer selection.
                 layer = validatedLayer(dimensions);
                 System.out.print("\n");
 
-                // Prompt and get row selection
+                // Prompt and get row selection.
                 row = validatedRow(dimensions); 
                 System.out.print("\n");
 
-                // Prompt and get column selection
+                // Prompt and get column selection.
                 column = validatedColumn(dimensions); 
 
-                // Check if selection is valid.
-                if ( game.move(layer, row, column ) == -1 ) {
+                // Check if selection is valid. If not, inform and prompt to try again.
+                if (!game.move(layer, row, column )) {
                     System.out.println( "\nInvalid insert at layer \"" + layer + "\" at row \"" + row +
                             "\" of column \"" + column + "\"" );
 
@@ -131,6 +132,7 @@ public class TicTacTixTest {
     }   
 
     /**
+     *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
      * for a boolean value by receiving y or Y for true, or n or N for false. This method will be used in main to
      * determine whether or not the player should go first. The validated choice will be returned as a boolean value.
@@ -140,7 +142,7 @@ public class TicTacTixTest {
      */
     private static boolean validatedIsFirst() {
         
-        // Create and initialize variables required in this method.
+        // Create and initialize variables/object required in this method.
         boolean valid = false;
         boolean isFirst = false;
         String userInput = null; 
@@ -177,12 +179,13 @@ public class TicTacTixTest {
     }
 
     /**
+     *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
      * for an integer value of the layer coordinate. This method will be used in main get an appropriate 
      * coordinate value for layer with the validateRange method. The value of the validated layer will be returned as
      * an integer.
      *
-     * @param maxLayer - The max number as a valid layer input.
+     * @param maxLayer - (int) The max number as a valid layer input.
      *
      * @return int - validated integer coordinate for layer.
      * 
@@ -203,12 +206,13 @@ public class TicTacTixTest {
     }
 
     /**
+     *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
      * for an integer value of the row coordinate. This method will be used in main get an appropriate 
      * coordinate value for row with the validateRange method. The value of the validated row will be returned as
      * an integer.
      *
-     * @param maxRow - The max number as a valid row input.
+     * @param maxRow - (int) The max number as a valid row input.
      *
      * @return int - validated integer coordinate for row.
      * 
@@ -229,6 +233,7 @@ public class TicTacTixTest {
     }
 
     /**
+     *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
      * for an integer value of the column coordinate. This method will be used in main get an appropriate 
      * coordinate value for column with the validateRange method. The value of the validated column will be returned as
@@ -255,6 +260,7 @@ public class TicTacTixTest {
     }
 
     /**
+     *
      * This method handles input validation given a range of values. This method is used to get a valid integer from 
      * the user. This method is specifically used to do the input validation integer inputs such as layer, row, 
      * and column. After acquiring the appropriate input, the validated integer will be returned.
@@ -267,7 +273,7 @@ public class TicTacTixTest {
      */
     private static int validateRange(int minNumber, int maxNumber) {
         
-        // Create and initialize variables required.
+        // Create and initialize variables/objects required.
         int input = -1;
         boolean valid = false;
         Scanner keyInput = new Scanner(System.in);
@@ -303,6 +309,7 @@ public class TicTacTixTest {
     }
     
     /**
+     *
      * This method records the winner's name in the "HallOfFame.txt" to be viewed at the beginning of the game.
      * This method opens the HallOfFame file (creates one if it doesn't exist), and prompt and append winner name
      * on to file.
@@ -314,7 +321,7 @@ public class TicTacTixTest {
      */
     private static void recordHallOfFame() {
         
-        // Create and initialize variables required.
+        // Create and initialize variables/object required.
         String name = null;
         Scanner keyInput = new Scanner(System.in);
 
