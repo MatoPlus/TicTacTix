@@ -99,7 +99,7 @@ public class TicTacTix {
      * column.
      *
      * @see Random
-     * @see move()
+     * @see move(int layer, int row, int column)
      *
      */
     public int[] getComputerMove() {
@@ -222,7 +222,7 @@ public class TicTacTix {
      *
      * @return boolean - determines whether there is a win in the 3D game board.
      *
-     * @see has2DWon()
+     * @see has2DWon(int[][] grid)
      *
      */
     public boolean hasWon() {
