@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Arrays;
 
 /**
  *
@@ -10,7 +11,7 @@ import java.util.Random;
  * 
  */
 public class TicTacTix {
-
+    
     // Declaration of instance variables
     private int[][][] grids;
     private int filledCells;
@@ -22,13 +23,13 @@ public class TicTacTix {
     private final int MAX_COLUMN;
     // The player whose turn it is (1 or 2).
     private int currentPlayer;
-
+    
     // Declaration of static variables.
     private final static int TIE = 0;
     private final static int PLAYER = 1;
     private final static int COMPUTER = 2;
     
-
+    
     /**
      * 
      * Parameterized constructor of the TicTacTix class. Creates an appropriate game setup depending on dimensions 
@@ -41,7 +42,7 @@ public class TicTacTix {
      *
      */
     public TicTacTix(int dimensions, boolean isFirst) {
-       
+        
         // Initialize the instance variables
         this.dimensions = dimensions;
         maxCells = dimensions * dimensions * dimensions;
@@ -49,7 +50,7 @@ public class TicTacTix {
         MAX_LAYER = dimensions;
         MAX_ROW = dimensions;
         MAX_COLUMN = dimensions;
-
+        
         // Create the n layer x n row x n col grids of integers... (dimension default is 3).
         grids = new int[MAX_LAYER][MAX_ROW][MAX_COLUMN];
         
@@ -64,9 +65,9 @@ public class TicTacTix {
         else {
             currentPlayer = COMPUTER;
         }
-
+        
     }
-
+    
     /**
      * 
      * A helper method that that determines the point of the grid to be reserved at the start of a TicTacTix game.
@@ -80,11 +81,11 @@ public class TicTacTix {
         int midLayer = MAX_LAYER/2;
         int midRow = MAX_ROW/2;
         int midColumn = MAX_COLUMN/2;
-
+        
         // Reserve the appropriate coordinate.
         grids[midLayer][midRow][midColumn] = -1;
     }
-
+    
     /**
      * 
      * A method that randomly generates a valid move that the computer can make. This valid move will be returned as 
@@ -110,23 +111,23 @@ public class TicTacTix {
         int computerLayer = -1;
         int computerRow = -1;
         int computerColumn = -1;
-            
+        
         // Generate a coordinate on the grid. Repeat until the coordinates are valid.
         do {
             computerLayer = generator.nextInt(MAX_LAYER) + 1;
             computerRow = generator.nextInt(MAX_ROW) + 1;
             computerColumn = generator.nextInt(MAX_COLUMN) + 1;
         } while(!move(computerLayer, computerRow, computerColumn));
-
+        
         // Store valid coordinates onto a single int array.
         coordinates[0] = computerLayer;
         coordinates[1] = computerRow;
         coordinates[2] = computerColumn;
-
+        
         // Return array of coordinates.
         return coordinates;
     }
-
+    
     /**
      * 
      * A method that reads the coordinates of called move. See if that move is valid on the grid. If valid, execute
@@ -140,15 +141,15 @@ public class TicTacTix {
      *
      */
     public boolean move(int layer, int row, int column) {
-
+        
         // Create and initialize variable required.
         boolean valid = true;
-
+        
         // Tweak layer, row, and column arguments to make data usable for arrays data structure (index start at 0).
         layer-=1;
         row-=1;
         column-=1;
-
+        
         // Check range of layer
         if (layer < 0 || layer > MAX_COLUMN-1) {
             valid = false;
@@ -165,21 +166,21 @@ public class TicTacTix {
         else if (grids[layer][row][column] != 0) {
             valid = false;
         }
-
+        
         // If move is still valid, make the move accordingly.
         if (valid) {
             // Fill the row and column with a checker. Record move.
             grids[layer][row][column] = currentPlayer;
             filledCells++;
-
+            
             // Alternate the player turn (switch between 1 and 2).
             currentPlayer = (currentPlayer%2)+1;
         }
-
+        
         // Return validity of move. 
         return valid;
     }
-   
+    
     /**
      * 
      * This method checks if the current game is over. This is used to determine when the game loop stops. 
@@ -192,11 +193,11 @@ public class TicTacTix {
      *
      */
     public boolean isGameOver() {
-       
+        
         // Create and initialize variable required.
         boolean status = false;
         
-
+        
         // Check win condition first, followed by if all cells are filled out. Depending on the condition, Set
         // the winner appropriately.
         if (hasWon()) {
@@ -212,7 +213,7 @@ public class TicTacTix {
         // Returns the status of "game over".
         return status;
     }
-
+    
     /**
      * 
      * This method checks the win condition and see if there is a winner in the following grid. This method will 
@@ -226,11 +227,11 @@ public class TicTacTix {
      *
      */
     public boolean hasWon() {
-       
+        
         // Create and initialize variables/object required.
         boolean status = false;
         int[][] tempGrid = new int[MAX_ROW][MAX_COLUMN];
-
+        
         // Horizontal layer, check each grid from side view, top to bottom.
         for (int layer = 0; layer < MAX_LAYER; layer++) {
             
@@ -239,7 +240,8 @@ public class TicTacTix {
                 for (int column = 0; column < MAX_COLUMN; column++) {
                     tempGrid[row][column] = grids[layer][row][column];       
                 }
-            }    
+            }
+            
             // Check for win of each 2D grid, break loop if win found.
             status = has2DWon(tempGrid);
             if (status) {
@@ -249,16 +251,17 @@ public class TicTacTix {
         
         // If there is no win found previously, continue to search.
         if (!status) {
-
+            
             // Vertical layer, check each grid from side to side (from the top view, up and down).
             for (int row = 0; row < MAX_ROW; row++) {
-
+                
                 // Record current 2D grid.
                 for (int layer = 0; layer < MAX_LAYER; layer++) {
                     for (int column = 0; column < MAX_COLUMN; column++) {
                         tempGrid[layer][column] = grids[layer][row][column];       
                     }
                 }  
+                
                 // Check for win for each 2D grid, break loop if win found.
                 status = has2DWon(tempGrid);
                 if (status) {
@@ -266,19 +269,20 @@ public class TicTacTix {
                 }
             }
         }
-
+        
         // If there is no win found previously, continue to search.
         if (!status) {
-
+            
             // Vertical layer, check each grid from side to side (from the top view, left to right).
             for (int column = 0; column < MAX_COLUMN; column++) {
-
+                
                 // Record current 2D gird.
                 for (int layer = 0; layer < MAX_LAYER; layer++) {
                     for (int row = 0; row < MAX_ROW; row++) {
                         tempGrid[layer][row] = grids[layer][row][column];       
                     }
                 }    
+                
                 // Check for win for each 2D grid, break loop if win found.
                 status = has2DWon(tempGrid);
                 if (status) {
@@ -286,11 +290,11 @@ public class TicTacTix {
                 }
             }
         }
-
+        
         // Return the status of whether there is a win.
         return status;
     }
-   
+    
     /**
      * 
      * A helper method that takes a 2D grid, treat it as a normal TicTacToe game and check if there is a win. If there
@@ -306,10 +310,10 @@ public class TicTacTix {
      *
      */
     private boolean has2DWon(int[][] grid) {
-       
+        
         // Create and initialize variable.
         boolean status = false;
-       
+        
         // Check horizontal wins of 2D grid.
         status = hasHorizontalWin(grid);
         
@@ -317,16 +321,16 @@ public class TicTacTix {
         if (!status) {
             status = hasVerticalWin(grid);
         }
-
+        
         // Continue to check diagonal  wins of 2D grid if necessary.
         if (!status) {
             status = hasDiagonalWin(grid);
         }
-       
+        
         // Returns status of whether there is a win in the 2D grid.
         return status;
     }
-
+    
     /**
      * 
      * A helper method that takes a 2D grid, check for any horizontal wins (A row which has the same column, indicated
@@ -338,21 +342,21 @@ public class TicTacTix {
      *
      */
     private boolean hasHorizontalWin(int[][] grid) {
-     
+        
         // Create and initialize variables
         boolean status = false;
         int tempElement = -1;
-
+        
         //Check for a horizontal win (of a row, all column have the same value of a player symbol).
         for ( int row=0; row < MAX_ROW; row++ ) {
-
+            
             // Check to see if it is a player symbol (not empty or reserved). Record value and continue to check...
             if (grid[row][0] == 1 || grid[row][0] == 2) {
-
+                
                 // Assume there is a horizontal win until confirmed that there isn't.
                 status = true;
                 tempElement = grid[row][0];
-
+                
                 // Check to see if all columns have that same player symbol.
                 for ( int column=1; column < MAX_COLUMN; column++ ) {
                     
@@ -369,11 +373,11 @@ public class TicTacTix {
                 break;
             }   
         }
-
+        
         // Return status reporting if there is a horizontal win.
         return status;
     }
-
+    
     /**
      * 
      * A helper method that takes a 2D grid, check for any vertical wins (A row which has the same column, indicated
@@ -385,24 +389,24 @@ public class TicTacTix {
      *
      */
     private boolean hasVerticalWin(int[][] grid) {
-
+        
         // Create and initialize variables required.
         boolean status = false;
         int tempElement = -1;
-
+        
         //Check for a vertical win (of a column, all rows values are of the same player symbol).
         for ( int column=0; column < MAX_COLUMN; column++ ) {
-
+            
             // Check to see if it is a player symbol (not empty or reserved). Record value and continue to check...
-            if (grid[0][column] == 1 || grid[column][0] == 2) {
-
+            if (grid[0][column] == 1 || grid[0][column] == 2) {
+                
                 // Assume there is a vertical win until denied.
                 status = true;
                 tempElement = grid[0][column];
                 
                 // Continue to check if all row of the column has the same value.
                 for ( int row=1; row < MAX_ROW; row++ ) {
-
+                    
                     // Deny vertical win if conflict found.
                     if (tempElement != grid[row][column]) {
                         status = false;
@@ -410,17 +414,17 @@ public class TicTacTix {
                     }
                 }
             }
-
+            
             // Break out of loop if win found.
             if (status) {
                 break;
             }   
         }
-
+        
         // Return the status of whether there is a vertical win.
         return status;
     }
-
+    
     /**
      * 
      * A helper method that takes a 2D grid, check for any diagonal wins (Each diagonal value is same as indicated
@@ -432,23 +436,23 @@ public class TicTacTix {
      *
      */
     private boolean hasDiagonalWin(int[][] grid) {
-
+        
         // Create and initialize variables required.
         boolean status = false;
         int tempElement = -1;
-
+        
         //Check for a diagonal win (negative slope)
         
         // Check if initial condition of a diagonal win (negative slope) is met (player symbol at initial position).
         if (grid[0][0] == 1 || grid[0][0] == 2) {
-
+            
             // Assume there is a diagonal win until denied.
             tempElement = grid[0][0];
             status = true;
-
+            
             // Check diagonals with a negative slope.
             for ( int slope=0; slope < dimensions; slope++ ) {
-
+                
                 // Deny diagonal win with a negative slope if there is a conflict.
                 if (tempElement != grid[slope][slope]) {
                     status = false;
@@ -456,20 +460,20 @@ public class TicTacTix {
                 }
             }
         }
-
-         //Check for a diagonal win (positive slope). Only if negative slope is not a win.
+        
+        //Check for a diagonal win (positive slope). Only if negative slope is not a win.
         if (!status) { 
-
+            
             // Check if initial condition of a diagonal win (positive slope) is met (player symbol found at initial)
             if (grid[0][dimensions-1] == 1 || grid[0][dimensions-1] == 2) {
-
+                
                 // Assume there is a diagonal win (positive slope) until denied. Record key for search.
                 tempElement = grid[0][dimensions-1];
                 status = true;
-
+                
                 // Check diagonals with positive slope.
                 for ( int slope=0; slope < dimensions; slope++ ) {
-
+                    
                     // Deny diagonal win with positive slope if there is a conflict.
                     if (tempElement != grid[slope][(dimensions-1)-slope]) {
                         status = false;
@@ -494,7 +498,7 @@ public class TicTacTix {
         // Return appropriate instance variable.
         return currentPlayer;
     }
-
+    
     /**
      * 
      * A accessor method that returns the value of "winner", an instance variable.
@@ -506,7 +510,7 @@ public class TicTacTix {
         // Return appropriate instance variable.
         return winner;
     }
-
+    
     /**
      *
      * A helper method that converts int representation of players to appropriate symbol for output in toString()
@@ -517,10 +521,10 @@ public class TicTacTix {
      *
      */
     private String convertSymbol(int key) {
-       
+        
         // Create and initialize variable required.
         String symbol = null;
-
+        
         // Symbol for empty cell.
         if (key == 0) {
             symbol = " ";
@@ -537,7 +541,7 @@ public class TicTacTix {
         else if (key == -1) {
             symbol = "+";
         }
-       
+        
         return symbol;
     }
     
@@ -550,14 +554,14 @@ public class TicTacTix {
      *
      */
     private String getHeadingStatus() {
-       
+        
         // Create and initialize required variables.
         String placeHolder = null;
         String heading = "";
-
+        
         // Get appropriate heading if game is over.
         if (winner != -1) {
-           
+            
             // Determine place holder name.
             if (winner == 1) {
                 placeHolder = "PLAYER";
@@ -568,14 +572,14 @@ public class TicTacTix {
             else {
                 placeHolder = "NO ONE";
             } 
-           
+            
             // get heading for game over.
             heading +=  "\t\t***GAME OVER: " + placeHolder +" WINS***\n\n";
         }
-
+        
         // Get appropriate heading if game is still in progress, returns current player turn.
         else {
-
+            
             // Determine status heading depending on if it is initial game startup or a player's turn.
             if (filledCells == 1) {
                 heading += ("\t\t     ====TIC-TAC-TOE=====\n\n");
@@ -587,12 +591,12 @@ public class TicTacTix {
                 heading += ("\t\t     ===COMPUTER'S MOVE===\n\n");
             }
         }
-
+        
         // Return appropriate heading of game.
         return heading;
-
+        
     }
-
+    
     /**
      * 
      * A helper method that gets the cell/game board representation of the game. This is to be used for output in the 
@@ -602,14 +606,14 @@ public class TicTacTix {
      *
      */
     private String getCellStatus() {
-   
+        
         // Create and initialize variable required.
         String cellStatus = "";
-
+        
         // For each layer, push all column headings with appropriate padding.
         for (int layer = 0; layer < MAX_LAYER; layer++) {
             cellStatus += "\t";
-
+            
             // Push column heading...
             for (int column = 0; column < MAX_COLUMN; column++) {
                 cellStatus += ("   "+(column+1));
@@ -635,7 +639,7 @@ public class TicTacTix {
                 }
             }
             cellStatus += "\n";
-
+            
             // Push appropriate line padding for grids after each row is printed.
             if (row != dimensions-1) {
                 for (int layer = 0; layer < MAX_LAYER; layer++) {
@@ -653,7 +657,7 @@ public class TicTacTix {
                 cellStatus += "\n";
             }
         }
-
+        
         // Return the final grid representation for visual aid.
         return cellStatus;
     }
@@ -673,12 +677,12 @@ public class TicTacTix {
         
         // Initialize output.
         String returnString = "\n";
-
+        
         // Get current status of game and add it to returnString.
         returnString += getHeadingStatus();
         // Get current status of cell placement and add it to returnString.
         returnString += getCellStatus();
-       
+        
         // Return final result of the final representation of the grid.
         return returnString;
     }

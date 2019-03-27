@@ -17,12 +17,12 @@ import java.io.IOException;
  *
  */
 public class TicTacTixTest {
-
+    
     /*
      * This is the main method that executes the program in the appropriate sequence.
      */
     public static void main(String[] args) {
-
+        
         // Create and initialize variables to be used in main. 
         int dimensions = 3;
         int layer = 0;
@@ -34,103 +34,102 @@ public class TicTacTixTest {
         String winner = null;
         boolean isFirst  = false;
         final int PLAYER = 1;
-
+        
         // Try to read from "HallOfFame.txt", prints winner or print appropriate prompt if otherwise.
         try {
-
+            
             // Creates scanner to read from file.
             Scanner fileInput = new Scanner(new File("HallOfFame.txt"));
             System.out.println("\t======Wall Of Fame======\n");
-
+            
             // If the file has names in it, print it. Other wise, tell the user that there are no names in the file.
             if (fileInput.hasNext()) {
-
+                
                 // List all names in the file with appropriate padding.
                 while (fileInput.hasNext()) {
-
+                    
                     previousWinner = fileInput.nextLine().trim();
                     recordLineNumber++;
-
+                    
                     System.out.println("\t    " + recordLineNumber + ": " + previousWinner);
                 }
-
                 System.out.print("\n");
             }
             else {
-
                 System.out.println ("\t    No one here yet...\n");
             }
         }
         // File is not found... Assume that there are no winner and inform user.
         catch (IOException exception) {
-
+            
             System.out.println("No Human Has Ever Beat Me.. *laughs in binary*\n");
         }
-
+        
         // Determine if player goes first...
         isFirst = validatedIsFirst();
-
+        
         // Set up game with appropriate parameters...
         TicTacTix game = new TicTacTix(dimensions, isFirst);
-
+        
         // Game logic loop. Keep playing until the game over.
         do {
-
+            
             // Game board output 
             System.out.println(game);
-
+            
             // Let player make move if it is the appropriate turn.
             if (game.getCurrentPlayer() == PLAYER) {
-                    
+                
                 // Prompt and get layer selection.
                 layer = validatedLayer(dimensions);
                 System.out.print("\n");
-
+                
                 // Prompt and get row selection.
                 row = validatedRow(dimensions); 
                 System.out.print("\n");
-
+                
                 // Prompt and get column selection.
                 column = validatedColumn(dimensions); 
-
+                
                 // Check if selection is valid. If not, inform and prompt to try again.
                 if (!game.move(layer, row, column )) {
                     System.out.println( "\nInvalid insert at layer \"" + layer + "\" at row \"" + row +
-                            "\" of column \"" + column + "\"" );
-
+                                       "\" of column \"" + column + "\"" );
+                    
                     System.out.println( "Please Try Again..\n" );
                 } 
             }
             else {
-                    
+                
                 // Get and execute computer move and assign values to appropriate variables.
                 computerMoves = game.getComputerMove();
                 layer = computerMoves[0];
                 row = computerMoves[1];
                 column = computerMoves[2];
-
+                
                 // Execute move made by computer.
                 game.move(layer, row, column);
-
+                
                 // Inform user of player move.
                 System.out.print("Computer picked layer \"" + layer + "\" at row \"" + row +
-                        "\" of column \"" + column + "\"\n" );
+                                 "\" of column \"" + column + "\"\n" );
             }
-
+            
         } while (!game.isGameOver());
-
+        
         // Final printing of game board after game ended.
         System.out.println( game );
-
+        
         // Record player name in hall of fame if they won.
         if (game.getWinner() == PLAYER) {
             recordHallOfFame();
+            
         }
-
+        
         // Game ended, inform user.
         System.out.println("\nThank you for playing TicTacTix!");
     }   
-
+    
     /**
      *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
@@ -156,20 +155,20 @@ public class TicTacTixTest {
             
             // Read user input.
             userInput = keyInput.nextLine();
-
+            
             // Logic to check whether or not input is valid.
             if (userInput.equalsIgnoreCase("y")) {
-
+                
                 isFirst = true;
                 valid = true;
             }
             else if (userInput.equalsIgnoreCase("n")) {
-
+                
                 isFirst = false;
                 valid = true;
             }
             else {
-
+                
                 System.out.print("Please enter a valid input (y/n): ");
             }
         }
@@ -177,7 +176,7 @@ public class TicTacTixTest {
         // Return status.
         return isFirst;
     }
-
+    
     /**
      *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
@@ -200,11 +199,11 @@ public class TicTacTixTest {
         // Prompt and get validated input (range from 1 to max layer).
         System.out.print("What layer would you like to pick (1-"+maxLayer+")?: ");
         layer = validateRange(1, maxLayer);
-
+        
         // Return validated layer coordinate.
         return layer;
     }
-
+    
     /**
      *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
@@ -220,7 +219,7 @@ public class TicTacTixTest {
      *
      */
     private static int validatedRow(int maxRow) {
-
+        
         // Create and initialize variable required.
         int row = -1;
         
@@ -231,7 +230,7 @@ public class TicTacTixTest {
         // Return validated row coordinate.
         return row;
     }
-
+    
     /**
      *
      * This method prompts and receives a valid input from the user. Specifically, this method will prompt the user
@@ -247,18 +246,18 @@ public class TicTacTixTest {
      *
      */
     private static int validatedColumn(int maxColumn) {
-
+        
         // Create and initialize variable as required.
         int column = -1;
-
+        
         // Prompt and get validated input (range from 1 to max column).
         System.out.print("What column would you like to pick (1-"+maxColumn+")?: ");
         column = validateRange(1, maxColumn);
-
+        
         // Return validated column coordinate.
         return column;
     }
-
+    
     /**
      *
      * This method handles input validation given a range of values. This method is used to get a valid integer from 
@@ -280,7 +279,7 @@ public class TicTacTixTest {
         
         // Input validation loop.
         while (!valid) {
-        
+            
             // Tries to get input as integer. If mismatch, clear \n in input stream and continue loop.
             try {
                 
@@ -297,13 +296,13 @@ public class TicTacTixTest {
                 }
             }
             catch(InputMismatchException exception) {
-
+                
                 // Re-prompt and clear input stream.
                 System.out.print("Please enter an INTEGER between "+minNumber+"-"+maxNumber+": ");
                 keyInput.nextLine();
             }
         }
-
+        
         // Returns validated input.
         return input;
     }
@@ -324,18 +323,18 @@ public class TicTacTixTest {
         // Create and initialize variables/object required.
         String name = null;
         Scanner keyInput = new Scanner(System.in);
-
+        
         // Prompt and get name
         System.out.print("Winner! Please enter your name: ");
         name = keyInput.nextLine();
-
+        
         // Try to open, write winner name, and close "HallOfFame.txt".
         try {
             FileWriter appendFile = new FileWriter("HallOfFame.txt", true);
             PrintWriter fileOutput = new PrintWriter(appendFile);
-
+            
             fileOutput.println(name);
-
+            
             fileOutput.close();
         }
         // Catch IOException error and inform user.
@@ -344,5 +343,5 @@ public class TicTacTixTest {
             System.out.println("Sorry, error occurred when outputting to file \"HallOfFame.txt\"");
         }
     }
-
+    
 }
