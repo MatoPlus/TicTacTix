@@ -297,10 +297,12 @@ public class TicTacTixTest {
             }
             catch(InputMismatchException exception) {
                 
-                // Re-prompt and clear input stream.
+                // Re-prompt for next input.
                 System.out.print("Please enter an INTEGER between "+minNumber+"-"+maxNumber+": ");
-                keyInput.nextLine();
             }
+            
+            // Clear input stream after an input attempt.
+            keyInput.nextLine();
         }
         
         // Returns validated input.
