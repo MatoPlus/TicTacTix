@@ -13,7 +13,7 @@ import java.io.IOException;
  * a 3 by 3 by 3 structure. Thus, the program may not function correctly if the dimensions value is changed.
  * 
  * @author Ri Xin Yang
- * @version March 12, 2019
+ * @version March 28, 2019
  *
  */
 public class TicTacTixTest {
@@ -25,15 +25,63 @@ public class TicTacTixTest {
         
         // Create and initialize variables to be used in main. 
         int dimensions = 3;
-        int layer = 0;
-        int row = 0;
-        int column = 0;
-        int[] computerMoves = new int[3];
-        int recordLineNumber = 0;
-        String previousWinner = null;
         String winner = null;
         boolean isFirst  = false;
         final int PLAYER = 1;
+      
+        // Display the wall of fame.
+        displayHallofFame();
+        
+        // Determine if player goes first...
+        isFirst = validatedIsFirst();
+        
+        // Set up game with appropriate parameters...
+        TicTacTix game = new TicTacTix(dimensions, isFirst);
+        
+        // Game logic loop. Keep playing until the game over.
+        do {
+            
+            // Game board output 
+            System.out.println(game);
+            
+            // Let player make move if it is the appropriate turn.
+            if (game.getCurrentPlayer() == PLAYER) {
+                // Player's turn, make its move.
+                makePlayerMove(game, dimensions); 
+            }
+            else {
+                // Computer's turn, make its move.
+                makeComputerMove(game, dimensions);
+            }
+            
+        } while (!game.isGameOver());
+        
+        // Final printing of game board after game ended.
+        System.out.println( game );
+        
+        // Record player name in hall of fame if they won.
+        if (game.getWinner() == PLAYER) {
+            recordHallOfFame();   
+        }
+        
+        // Game ended, inform user.
+        System.out.println("\nThank you for playing TicTacTix!");
+    }   
+    
+    /**
+     * 
+     * This method prints the hall of fame to the console upon being called. The winners will be ordered and printed in 
+     * the appropriate format. If empty, inform user that no one has won the game as of yet.
+     * 
+     * @see Scanner
+     * @see File
+     * @see IOException
+     * 
+     */
+    private static void displayHallofFame() {  
+        
+        int recordLineNumber = 0;
+        String previousWinner = null;
         
         // Try to read from "HallOfFame.txt", prints winner or print appropriate prompt if otherwise.
         try {
@@ -61,74 +109,10 @@ public class TicTacTixTest {
         }
         // File is not found... Assume that there are no winner and inform user.
         catch (IOException exception) {
-            
             System.out.println("No Human Has Ever Beat Me.. *laughs in binary*\n");
         }
         
-        // Determine if player goes first...
-        isFirst = validatedIsFirst();
-        
-        // Set up game with appropriate parameters...
-        TicTacTix game = new TicTacTix(dimensions, isFirst);
-        
-        // Game logic loop. Keep playing until the game over.
-        do {
-            
-            // Game board output 
-            System.out.println(game);
-            
-            // Let player make move if it is the appropriate turn.
-            if (game.getCurrentPlayer() == PLAYER) {
-                
-                // Prompt and get layer selection.
-                layer = validatedLayer(dimensions);
-                System.out.print("\n");
-                
-                // Prompt and get row selection.
-                row = validatedRow(dimensions); 
-                System.out.print("\n");
-                
-                // Prompt and get column selection.
-                column = validatedColumn(dimensions); 
-                
-                // Check if selection is valid. If not, inform and prompt to try again.
-                if (!game.move(layer, row, column )) {
-                    System.out.println( "\nInvalid insert at layer \"" + layer + "\" at row \"" + row +
-                                       "\" of column \"" + column + "\"" );
-                    
-                    System.out.println( "Please Try Again..\n" );
-                } 
-            }
-            else {
-                
-                // Get and execute computer move and assign values to appropriate variables.
-                computerMoves = game.getComputerMove();
-                layer = computerMoves[0];
-                row = computerMoves[1];
-                column = computerMoves[2];
-                
-                // Execute move made by computer.
-                game.move(layer, row, column);
-                
-                // Inform user of player move.
-                System.out.print("Computer picked layer \"" + layer + "\" at row \"" + row +
-                                 "\" of column \"" + column + "\"\n" );
-            }
-            
-        } while (!game.isGameOver());
-        
-        // Final printing of game board after game ended.
-        System.out.println( game );
-        
-        // Record player name in hall of fame if they won.
-        if (game.getWinner() == PLAYER) {
-            recordHallOfFame();
-            
-        }
-        
-        // Game ended, inform user.
-        System.out.println("\nThank you for playing TicTacTix!");
-    }   
+    }
     
     /**
      *
@@ -168,13 +152,84 @@ public class TicTacTixTest {
                 valid = true;
             }
             else {
-                
                 System.out.print("Please enter a valid input (y/n): ");
             }
         }
         
         // Return status.
         return isFirst;
+    }
+    
+    /**
+     * 
+     * This method accepts the gameboard and the dimensions used by the board to make the player move. This method uses
+     * further validation methods to ensure that the player makes a valid move to be carried out.
+     * 
+     * @param game - (TicTacTix) Used to make move.
+     * @param dimensions - (int) Used to determine the valid range the position that the user can choose. 
+     * 
+     * @see validatedLayer
+     * @see validatedRow
+     * @see validatedColumn
+     * 
+     */
+    private static void makePlayerMove(TicTacTix game, int dimensions) {
+        
+        // Define local variables used.
+        int layer = 0;
+        int row = 0;
+        int column = 0;
+        
+        // Prompt and get layer selection.
+        layer = validatedLayer(dimensions);
+        System.out.print("\n");
+        
+        // Prompt and get row selection.
+        row = validatedRow(dimensions); 
+        System.out.print("\n");
+        
+        // Prompt and get column selection.
+        column = validatedColumn(dimensions); 
+        
+        // Check if selection is valid. If not, inform and prompt to try again.
+        if (!game.move(layer, row, column )) {
+            System.out.println( "\nInvalid insert at layer \"" + layer + "\" at row \"" + row +
+                               "\" of column \"" + column + "\"" );
+            
+            System.out.println( "Please Try Again..\n" );
+        }   
+    }
+    
+    /**
+     * 
+     * This method accepts the gameboard and the dimensions used by the board to make the computer move. This method
+     * uses further validation methods to ensure that the computer makes a valid move to be carried out.
+     * 
+     * @param game - (TicTacTix) Used to make move.
+     * @param dimensions - (int) Used to determine the valid range the position that the user can choose. 
+     * 
+     */
+    private static void makeComputerMove(TicTacTix game, int dimensions) {
+        
+        // Define local variables used.
+        int[] computerMoves = new int[3];
+        int layer = 0;
+        int row = 0;
+        int column = 0;
+        
+        // Get and execute computer move and assign values to appropriate variables.
+        computerMoves = game.getComputerMove();
+        layer = computerMoves[0];
+        row = computerMoves[1];
+        column = computerMoves[2];
+        
+        // Execute move made by computer.
+        game.move(layer, row, column);
+        
+        // Inform user of computer move.
+        System.out.print("Computer picked layer \"" + layer + "\" at row \"" + row +
+                         "\" of column \"" + column + "\"\n" );
+        
     }
     
     /**

@@ -7,7 +7,7 @@ import java.util.Arrays;
  * win conditions and the general control flow of the game.
  *
  * @author Ri Xin Yang
- * @version March 12, 2019
+ * @version March 28, 2019
  * 
  */
 public class TicTacTix {
