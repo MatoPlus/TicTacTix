@@ -3,7 +3,7 @@ A 3-layer Tic-Tac-Toe terminal game/program powered by Java.
 
 ## Features
 + JavaDoc + JavaDoc commenting.
-+ Manipulation of 3D array.
++ Dynamic manipulation of 3D array.
 + Allows the grid dimensions to be changed easily within the source code by changing `dimensions` in `TicTacTixTest.java`.
 
 ## Usage
