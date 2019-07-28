@@ -1,6 +1,11 @@
 # Tic-Tactix
 A 3-layer Tic-Tac-Toe terminal game/program powered by Java.
 
+## Features
++ JavaDoc + JavaDoc commenting.
++ Manipulation of 3D array.
++ Allows the grid dimensions to be changed easily within the source code by changing `dimensions` in `TicTacTixTest.java`.
+
 ## Usage
 Simply complie src code with javac and execute the class file with JVM.
 
