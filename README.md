@@ -1,5 +1,5 @@
 # Tic-Tactix
-A 3-layer Tic-Tac-Toe terminal game/program powered by Java.
+A 3-layer Tic-Tac-Toe text-based/terminal game powered by Java.
 
 ## Features
 + JavaDoc + JavaDoc commenting.
